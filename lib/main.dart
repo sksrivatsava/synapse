@@ -1,7 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:mysql1/mysql1.dart';
-void main() {
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+// import 'package:firebase_core_example/firebase_config.dart';
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+
+  );
   runApp(MaterialApp(
+
     home: MyApp(),
   ));
 }
@@ -11,6 +19,9 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  final FirebaseAuth _auth= FirebaseAuth.instance;
+  var user="";
+  var pass="";
   @override
   void initState() {
     // TODO: implement initState
@@ -40,8 +51,36 @@ class _MyAppState extends State<MyApp> {
       appBar: AppBar(
         title: Text('synapse'),
       ),
-      body: Container(
-
+      body: Center(
+        child: Container(
+              child: Column(
+                children: [
+                      TextFormField(
+                        onChanged: (c){
+                          setState(() {
+                            user=c;
+                          });
+                        },
+                      ),
+                  TextFormField(
+                    onChanged: (c){
+                      setState(() {
+                        pass=c;
+                      });
+                    },
+                  ),
+                  FlatButton(onPressed: (){
+                    try {
+                      _auth.signInWithEmailAndPassword(
+                          email: user, password: pass);
+                    }
+                    catch(e){
+                      print(e);
+                    }
+                  }, child: Text("submit"))
+                ],
+              ),
+        ),
       ),
     );
   }
