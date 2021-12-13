@@ -29,6 +29,7 @@ class _MyAppState extends State<MyApp> {
     var results=await conn.query('select * from test');
     for(var row in results){
       print('${row[0]} ${row[1]}');
+      print("nice");
     }
 
 
