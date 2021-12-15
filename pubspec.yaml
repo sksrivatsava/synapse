@@ -37,6 +37,9 @@ dependencies:
   mysql1: ^0.19.2
   firebase_auth:
   firebase_core:
+  firedart: ^0.9.0+1
+  agora_rtc_engine: ^4.0.2
+  permission_handler: ^8.1.1
 
 
 dev_dependencies:

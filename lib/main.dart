@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:mysql1/mysql1.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
+
+import 'package:firedart/firedart.dart';
 
 void main() async{
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-
-  );
+  FirebaseAuth.initialize('AIzaSyA3LxarRw6wCEAYK0EVrwMviZ_O4srwMzw', VolatileStore());
   runApp(MaterialApp(
 
     home: MyApp(),
@@ -26,6 +23,7 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     // TODO: implement initState
     super.initState();
+
     getData();
   }
   void getData() async{
@@ -71,8 +69,7 @@ class _MyAppState extends State<MyApp> {
                   ),
                   FlatButton(onPressed: (){
                     try {
-                      _auth.signInWithEmailAndPassword(
-                          email: user, password: pass);
+                      _auth.signUp(user, pass);
                     }
                     catch(e){
                       print(e);
@@ -85,5 +82,4 @@ class _MyAppState extends State<MyApp> {
     );
   }
 }
-
 
