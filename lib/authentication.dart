@@ -5,12 +5,15 @@ import 'package:flutter/material.dart';
 import 'package:mysql1/mysql1.dart';
 
 import 'package:firedart/firedart.dart';
+import 'package:synapse/domain_selection.dart';
 
 import 'connection_settings.dart';
 import 'loading.dart';
 
 
 class authentication extends StatefulWidget {
+  final conn;
+  authentication(this.conn);
   @override
   _authenticationState createState() => _authenticationState();
 }
@@ -30,7 +33,7 @@ class _authenticationState extends State<authentication> {
   var attendee_college="";
   var attendee_branch="CSE";
   var organiser_channel_name="";
-  var conn;
+
   var sqlu='insert into user (email,type) values(?,?)';
   var sqla='insert into attendee (attendee_id,attendee_name,attendee_dob,attendee_occupation,attendee_present_qualification,attendee_college,attendee_branch) values(?,?,?,?,?,?,?)';
   var sqlo='insert into organiser (organiser_id,organiser_name,organiser_channel_name) values(?,?,?)';
@@ -38,13 +41,9 @@ class _authenticationState extends State<authentication> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    getconnect();
-  }
-  void getconnect() async {
-
-      conn = await MySqlConnection.connect(settings);
 
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -223,12 +222,15 @@ class _authenticationState extends State<authentication> {
                     child: GestureDetector(
                       child: Row(
                           children:[
-                            Text('date_of_birth'),
+                            attendee_dob==null?Text('date_of_birth'):Text(attendee_dob.toString()),
                             Icon(
                         Icons.calendar_today
                       )]),
                       onTap: () async{
                         attendee_dob=await showDatePicker(context: context, initialDate: DateTime.now(), firstDate: DateTime(1900), lastDate: DateTime(2100));
+                        setState(() {
+
+                        });
                       },
                     ),
                   ):SizedBox(),
@@ -349,7 +351,7 @@ class _authenticationState extends State<authentication> {
                     onPressed: () async{
 
 
-                       await _auth.signUp(email, pass);
+
 
                       var tname;
 
@@ -366,10 +368,11 @@ class _authenticationState extends State<authentication> {
                         print(attendee_present_qualification);
                         print(attendee_branch);
                         tname='attendee';
-                        var r=await conn.query(sqlu,[email,tname]);
+                        var r=await widget.conn.query(sqlu,[email,tname]);
                         var dob=attendee_dob.year.toString()+'-'+attendee_dob.month.toString()+'-'+attendee_dob.day.toString();
-                        var r1=await conn.query(sqla,[r.insertId,username,dob,attendee_occupation,attendee_present_qualification,attendee_college,attendee_branch]);
+                        var r1=await widget.conn.query(sqla,[r.insertId,username,dob,attendee_occupation,attendee_present_qualification,attendee_college,attendee_branch]);
 
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=>domain_selection(r.insertId,widget.conn)));
 
 
 
@@ -377,9 +380,11 @@ class _authenticationState extends State<authentication> {
                       else{
                         print(organiser_channel_name);
                         tname='organiser';
-                        var r=await conn.query(sqlu,[email,tname]);
-                        var r1=await conn.query(sqlo,[r.insertId,username,organiser_channel_name]);
+                        var r=await widget.conn.query(sqlu,[email,tname]);
+                        var r1=await widget.conn.query(sqlo,[r.insertId,username,organiser_channel_name]);
                       }
+
+                      await _auth.signUp(email, pass);
 
 
 
