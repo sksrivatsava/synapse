@@ -1,6 +1,7 @@
 import 'package:firedart/firedart.dart';
 import 'package:flutter/material.dart';
 import 'package:collapsible_sidebar/collapsible_sidebar.dart';
+import 'package:synapse/registered_events.dart';
 
 class attendee_home extends StatefulWidget {
   final user;
@@ -55,7 +56,7 @@ class _attendee_homeState extends State<attendee_home> {
             CollapsibleItem(text: 'Calendar', icon: Icons.calendar_today, onPressed: (){}),
             CollapsibleItem(text: 'Registered_events', icon: Icons.event_note, onPressed: (){
               
-
+                Navigator.push(context, MaterialPageRoute(builder: (context)=>registered_event(widget.user, widget.conn)));
             }),
             CollapsibleItem(text: 'current_events', icon: Icons.event_available, onPressed: (){}),
             CollapsibleItem(text: 'upcoming_events', icon: Icons.event_rounded, onPressed: (){}),
