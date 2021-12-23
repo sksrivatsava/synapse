@@ -2,6 +2,7 @@ import 'package:firedart/firedart.dart';
 import 'package:flutter/material.dart';
 import 'package:collapsible_sidebar/collapsible_sidebar.dart';
 import 'package:synapse/registered_events.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class attendee_home extends StatefulWidget {
   final user;
@@ -47,58 +48,87 @@ class _attendee_homeState extends State<attendee_home> {
         title: Text('attendee_home'),
       ),
 
-      body: CollapsibleSidebar(
-        title: 'Synapse',
-        isCollapsed: false,
-        avatarImg: NetworkImage('https://www.pngplay.com/wp-content/uploads/5/Webinar-Logo-Wifi-PNG.png'),
-        items: [
-          CollapsibleItem(text: 'Calendar', icon: Icons.calendar_today, onPressed: (){}),
-          CollapsibleItem(text: 'Registered_events', icon: Icons.event_note, onPressed: (){
-
-              Navigator.push(context, MaterialPageRoute(builder: (context)=>registered_event(widget.user, widget.conn)));
-          }),
-          CollapsibleItem(text: 'current_events', icon: Icons.event_available, onPressed: (){}),
-          CollapsibleItem(text: 'upcoming_events', icon: Icons.event_rounded, onPressed: (){}),
-          CollapsibleItem(text: 'Proifle', icon: Icons.person, onPressed: (){},isSelected: true),
-          CollapsibleItem(text: 'Signout', icon: Icons.logout, onPressed: (){
-
-            _auth.signOut();
-          })
-
-
-        ],
-        body:GridView.builder(
+      body: GridView.builder(
           itemCount: l.length,
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: (MediaQuery.of(context).orientation == Orientation.portrait) ? 2 : 3),
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: (MediaQuery.of(context).orientation == Orientation.portrait) ? 2 : 3),
 
-            itemBuilder: (context,i){
-                return Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Card(
-                    child: Column(
-                      children: [
-                        Text(l[i].event_id.toString()),
-                        Text(l[i].event_name),
-                        Text(l[i].domain_name),
-                        Text(l[i].channel_name),
-                        Text(l[i].start_time),
-                        Text(l[i].event_platform),
-                        Text(l[i].duration),
-                        RaisedButton(
-                            child: Text('Register'),
-                            onPressed: () async{
-                                    var r=await widget.conn.query('insert into registration(event_id,attendee_id,join_status) values(?,?,?)',[l[i].event_id,widget.user,0]);
-                                    setState(() {
-                                      l.removeAt(i);
-                                    });
+          itemBuilder: (context,i){
+            return Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Card(
+                child: Column(
+                  children: [
+                    Text(l[i].event_id.toString()),
+                    Text(l[i].event_name),
+                    Text(l[i].domain_name),
+                    Text(l[i].channel_name),
+                    Text(l[i].start_time),
+                    Text(l[i].event_platform),
+                    Text(l[i].duration),
+                    RaisedButton(
+                        child: Text('Register'),
+                        onPressed: () async{
+                          var r=await widget.conn.query('insert into registration(event_id,attendee_id,join_status) values(?,?,?)',[l[i].event_id,widget.user,0]);
+                          setState(() {
+                            l.removeAt(i);
+                          });
                         })
-                      ],
-                    ),
-                  ),
-                );
-            })
-      )
+                  ],
+                ),
+              ),
+            );
+          }),
+      drawer: Drawer(
+        child: Column(
+          children: [
+            ListTile(
+              leading: FaIcon(FontAwesomeIcons.calendarWeek),
+              title: Text('Calendar'),
+              onTap: (){},
+            ),
+            ListTile(
+              leading: FaIcon(Icons.event_note),
+              title: Text('Registered_events'),
+              onTap: (){
+
+                Navigator.push(context, MaterialPageRoute(builder: (context)=>registered_event(widget.user, widget.conn)));
+              }
+
+            ),
+            ListTile(
+              leading: Icon(Icons.event_available),
+              title: Text('Current_events'),
+              onTap: (){
+
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.event_rounded),
+              title: Text('upcoming_events'),
+              onTap: (){
+
+              },
+
+            ),
+            ListTile(
+              leading: Icon(Icons.person),
+              title: Text('Profile'),
+              onTap: (){
+
+              },
+
+            ),
+            ListTile(
+              leading: Icon(Icons.logout),
+              title: Text('signout'),
+              onTap: (){
+                _auth.signOut();
+              },
+            )
+          ],
+        ),
+      ),
     );
   }
 }
