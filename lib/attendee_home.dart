@@ -1,8 +1,10 @@
 import 'package:firedart/firedart.dart';
 import 'package:flutter/material.dart';
 import 'package:collapsible_sidebar/collapsible_sidebar.dart';
+import 'package:synapse/current_events.dart';
 import 'package:synapse/registered_events.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:synapse/upcoming_events.dart';
 
 class attendee_home extends StatefulWidget {
   final user;
@@ -100,14 +102,14 @@ class _attendee_homeState extends State<attendee_home> {
               leading: Icon(Icons.event_available),
               title: Text('Current_events'),
               onTap: (){
-
+                Navigator.push(context, MaterialPageRoute(builder: (context)=>current_events(widget.user, widget.conn)));
               },
             ),
             ListTile(
               leading: Icon(Icons.event_rounded),
               title: Text('upcoming_events'),
               onTap: (){
-
+                Navigator.push(context, MaterialPageRoute(builder: (context)=>upcoming_events(widget.user, widget.conn)));
               },
 
             ),
