@@ -91,7 +91,7 @@ class _attendee_homeState extends State<attendee_home> {
             ),
             ListTile(
               leading: FaIcon(Icons.event_note),
-              title: Text('Registered_events'),
+              title: Text('Past_events'),
               onTap: (){
 
                 Navigator.push(context, MaterialPageRoute(builder: (context)=>registered_event(widget.user, widget.conn)));

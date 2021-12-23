@@ -53,8 +53,10 @@ class _current_eventsState extends State<current_events> {
                   Text(l[i].start_time),
                   Text(l[i].event_platform),
                   Text(l[i].duration),
-                  RaisedButton(onPressed: (){
-                    
+                  RaisedButton(
+                      child: Text('join'),
+                      onPressed: () async{
+                          var r=await widget.conn.query('update registration set join_status=? where event_id=? and attendee_id=?',[1,l[i].event_id,widget.user]);
                   })
                 ],
               ),
