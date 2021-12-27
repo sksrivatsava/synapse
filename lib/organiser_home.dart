@@ -2,6 +2,7 @@ import 'package:collapsible_sidebar/collapsible_sidebar.dart';
 import 'package:flutter/material.dart';
 import 'package:firedart/firedart.dart';
 import 'package:mysql1/mysql1.dart';
+import 'package:synapse/create_meet.dart';
 import 'package:synapse/event_form.dart';
 
 import 'connection_settings.dart';
@@ -91,7 +92,8 @@ class _organiser_homeState extends State<organiser_home> {
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () async{
-              dynamic r=await Navigator.push(context, MaterialPageRoute(builder: (context)=>eventform(widget.user,widget.conn)));
+              // dynamic r=await Navigator.push(context, MaterialPageRoute(builder: (context)=>eventform(widget.user,widget.conn)));
+          dynamic r=await Navigator.push(context, MaterialPageRoute(builder: (context)=>create_meet()));
               if(r=='back'){
                 getdata();
               }
