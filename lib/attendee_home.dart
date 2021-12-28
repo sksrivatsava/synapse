@@ -117,7 +117,7 @@ class _attendee_homeState extends State<attendee_home> {
               leading: Icon(Icons.person),
               title: Text('Profile'),
               onTap: (){
-
+                  
               },
 
             ),

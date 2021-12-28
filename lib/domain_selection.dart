@@ -82,8 +82,13 @@ class _domain_selectionState extends State<domain_selection> {
               ),
               onTap: (){
                 setState(() {
+                  if(dl[index].istap==false){
                   dl[index].istap=true;
-                  ind.add(dl[index].domain);
+                  ind.add(dl[index].domain);}
+                  else{
+                    dl[index].istap=false;
+                    ind.remove(dl[index].domain);
+                  }
                 });
 
               },

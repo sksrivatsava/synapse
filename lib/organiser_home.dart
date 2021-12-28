@@ -1,7 +1,9 @@
 import 'package:collapsible_sidebar/collapsible_sidebar.dart';
 import 'package:flutter/material.dart';
 import 'package:firedart/firedart.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:mysql1/mysql1.dart';
+import 'package:synapse/analytics.dart';
 import 'package:synapse/create_meet.dart';
 import 'package:synapse/event_form.dart';
 
@@ -51,19 +53,9 @@ class _organiser_homeState extends State<organiser_home> {
         title: Text('organiser_home'),
       ),
 
-      body:SafeArea(
-        child: CollapsibleSidebar(
-          title: 'Synapse',
-          isCollapsed: false,
-          avatarImg: NetworkImage('https://www.pngplay.com/wp-content/uploads/5/Webinar-Logo-Wifi-PNG.png'),
-          items: [
-                CollapsibleItem(text: 'Profile', icon: Icons.person, onPressed: (){},isSelected: true),
-              CollapsibleItem(text: 'Signout', icon: Icons.logout, onPressed: (){
 
-                _auth.signOut();
-              }),
 
-          ],
+
           body: Container(
             padding: EdgeInsetsDirectional.all(10),
             child: ListView.builder(
@@ -87,8 +79,42 @@ class _organiser_homeState extends State<organiser_home> {
             }
             ),
           ),
+
+      drawer: Drawer(
+        child: Column(
+          children: [
+
+            ListTile(
+                leading: FaIcon(FontAwesomeIcons.chartArea),
+                title: Text('analytics'),
+                onTap: (){
+
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=>analytics(widget.user, widget.conn)));
+                }
+
+            ),
+
+
+            ListTile(
+              leading: Icon(Icons.person),
+              title: Text('Profile'),
+              onTap: (){
+
+              },
+
+            ),
+            ListTile(
+              leading: Icon(Icons.logout),
+              title: Text('signout'),
+              onTap: (){
+                _auth.signOut();
+              },
+            )
+          ],
         ),
       ),
+
+
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () async{
