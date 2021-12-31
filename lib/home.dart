@@ -2,6 +2,7 @@ import 'package:mysql1/mysql1.dart';
 import 'package:flutter/material.dart';
 import 'package:firedart/firedart.dart';
 import 'package:synapse/attendee_home.dart';
+import 'package:synapse/loading.dart';
 import 'package:synapse/organiser_home.dart';
 
 import 'connection_settings.dart';
@@ -44,7 +45,7 @@ class _homeState extends State<home> {
       return organiser_home(user,widget.conn);
     }
     else{
-      return Container(child: Text('loading...'),);
+      return loading();
     }
   }
 }
