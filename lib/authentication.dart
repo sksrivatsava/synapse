@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:mysql1/mysql1.dart';
 
 import 'package:firedart/firedart.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:synapse/domain_selection.dart';
 
 import 'connection_settings.dart';
@@ -12,8 +13,7 @@ import 'loading.dart';
 
 
 class authentication extends StatefulWidget {
-  final conn;
-  authentication(this.conn);
+
   @override
   _authenticationState createState() => _authenticationState();
 }
@@ -108,7 +108,7 @@ class _authenticationState extends State<authentication> {
                             print("--------login----------");
                             print(loguser);
                             print(logpass);
-                            
+                            SharedPreferences prefs=await SharedPreferences.getInstance();
                               try {
                                 await _auth.signIn(loguser, logpass);
                               } on Exception catch (e) {
@@ -120,6 +120,9 @@ class _authenticationState extends State<authentication> {
                             if(_auth.isSignedIn){
                               print("signed in");
                               print(_auth.getUser());
+                              prefs.setString('user',loguser);
+                              prefs.setString('pass', logpass);
+
                             }
                             else{
                               print("nope");
@@ -381,7 +384,8 @@ class _authenticationState extends State<authentication> {
 
 
 
-                        if (_formKey.currentState!.validate() && typeofuser!=null && attendee_dob!=null) {
+                        if (_formKey.currentState!.validate() && typeofuser!=null) {
+                          var conn =await MySqlConnection.connect(settings);
                           try {
                             var tname;
 
@@ -391,18 +395,18 @@ class _authenticationState extends State<authentication> {
                             print(email);
                             print(pass);
                             print(username);
-                            if(typeofuser==1){
+                            if(typeofuser==1 && attendee_dob!=null){
                               print(attendee_dob);
                               print(attendee_occupation);
                               print(attendee_college);
                               print(attendee_present_qualification);
                               print(attendee_branch);
                               tname='attendee';
-                              var r=await widget.conn.query(sqlu,[email,tname]);
+                              var r=await conn.query(sqlu,[email,tname]);
                               var dob=attendee_dob.year.toString()+'-'+attendee_dob.month.toString()+'-'+attendee_dob.day.toString();
-                              var r1=await widget.conn.query(sqla,[r.insertId,username,dob,attendee_occupation,attendee_present_qualification,attendee_college,attendee_branch]);
+                              var r1=await conn.query(sqla,[r.insertId,username,dob,attendee_occupation,attendee_present_qualification,attendee_college,attendee_branch]);
 
-                              Navigator.push(context, MaterialPageRoute(builder: (context)=>domain_selection(r.insertId,widget.conn)));
+                              Navigator.push(context, MaterialPageRoute(builder: (context)=>domain_selection(r.insertId)));
 
 
 
@@ -410,11 +414,14 @@ class _authenticationState extends State<authentication> {
                             else{
                               print(organiser_channel_name);
                               tname='organiser';
-                              var r=await widget.conn.query(sqlu,[email,tname]);
-                              var r1=await widget.conn.query(sqlo,[r.insertId,username,organiser_channel_name]);
+                              var r=await conn.query(sqlu,[email,tname]);
+                              var r1=await conn.query(sqlo,[r.insertId,username,organiser_channel_name]);
                             }
-
+                            conn.close();
                             await _auth.signUp(email, pass);
+                            SharedPreferences prefs=await SharedPreferences.getInstance();
+                            prefs.setString('user',email);
+                            prefs.setString('pass', pass);
                           } on Exception catch (e) {
                             // TODO
                             setState(() {

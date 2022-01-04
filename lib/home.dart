@@ -7,8 +7,8 @@ import 'package:synapse/organiser_home.dart';
 
 import 'connection_settings.dart';
 class home extends StatefulWidget {
-  final conn;
-  home(this.conn);
+  // final conn;
+  // home(this.conn);
   @override
   _homeState createState() => _homeState();
 }
@@ -25,8 +25,9 @@ class _homeState extends State<home> {
   }
   void getData() async{
     var x = await _auth.getUser();
-
-    var r=await widget.conn.query('select * from user where email=?',[x.email]);
+    var conn =await MySqlConnection.connect(settings);
+    var r=await conn.query('select * from user where email=?',[x.email]);
+    conn.close();
     for(var i in r){
       setState(() {
         type=i[2];
@@ -39,12 +40,13 @@ class _homeState extends State<home> {
   @override
   Widget build(BuildContext context) {
     if(type=='attendee'){
-      return attendee_home(user,widget.conn);
+      return attendee_home(user);
     }
     else if(type=='organiser'){
-      return organiser_home(user,widget.conn);
+      return organiser_home(user);
     }
     else{
+      print(type);
       return loading();
     }
   }

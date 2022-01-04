@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:firedart/firedart.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:mysql1/mysql1.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:synapse/analytics.dart';
 import 'package:synapse/create_meet.dart';
 import 'package:synapse/event_form.dart';
@@ -11,8 +12,8 @@ import 'connection_settings.dart';
 
 class organiser_home extends StatefulWidget {
   final user;
-  final conn;
-  organiser_home(this.user,this.conn);
+
+  organiser_home(this.user);
   @override
   _organiser_homeState createState() => _organiser_homeState();
 }
@@ -38,7 +39,9 @@ class _organiser_homeState extends State<organiser_home> {
   }
   void getdata() async{
     l=[];
-    var r=await widget.conn.query('select * from event where organiser_id=?',[widget.user]);
+    var conn =await MySqlConnection.connect(settings);
+    var r=await conn.query('select * from event where organiser_id=?',[widget.user]);
+    conn.close();
     for(var i in r){
       setState(() {
         l.add(event(i[2].toString(), i[3].toString(), i[4].toString(), i[5].toString(), i[6].toString(), i[8].toString(),i[7].toString()));
@@ -89,7 +92,7 @@ class _organiser_homeState extends State<organiser_home> {
                 title: Text('analytics'),
                 onTap: (){
 
-                  Navigator.push(context, MaterialPageRoute(builder: (context)=>analytics(widget.user, widget.conn)));
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=>analytics(widget.user)));
                 }
 
             ),
@@ -106,8 +109,11 @@ class _organiser_homeState extends State<organiser_home> {
             ListTile(
               leading: Icon(Icons.logout),
               title: Text('signout'),
-              onTap: (){
+              onTap: () async{
                 _auth.signOut();
+                SharedPreferences prefs=await SharedPreferences.getInstance();
+                prefs.remove('user');
+                prefs.remove('pass');
               },
             )
           ],
@@ -118,7 +124,7 @@ class _organiser_homeState extends State<organiser_home> {
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () async{
-              dynamic r=await Navigator.push(context, MaterialPageRoute(builder: (context)=>eventform(widget.user,widget.conn)));
+              dynamic r=await Navigator.push(context, MaterialPageRoute(builder: (context)=>eventform(widget.user)));
           // dynamic r=await Navigator.push(context, MaterialPageRoute(builder: (context)=>create_meet()));
               if(r=='back'){
                 getdata();

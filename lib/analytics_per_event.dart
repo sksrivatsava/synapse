@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:mysql1/mysql1.dart';
 import 'package:synapse/organiser_home.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
+
+import 'connection_settings.dart';
 
 class analytics_per_event extends StatefulWidget {
   final event_id;
   final user;
-  final conn;
-  analytics_per_event(this.event_id,this.user,this.conn);
+
+  analytics_per_event(this.event_id,this.user);
   @override
   _analytics_per_eventState createState() => _analytics_per_eventState();
 }
@@ -39,7 +42,9 @@ class _analytics_per_eventState extends State<analytics_per_event> {
     var present_qualificationdict={};
     var collegedict={};
     var branchdict={};
-    var r=await widget.conn.query('select CONCAT(CONVERT(FLOOR(FLOOR(FLOOR(DATEDIFF(CURRENT_DATE , a.attendee_dob)/365)/10)-1)*10,CHAR),"-",CONVERT(FLOOR(FLOOR(DATEDIFF(CURRENT_DATE , a.attendee_dob)/365)/10)*10,CHAR)) AS SOMETHING,a.attendee_occupation,a.attendee_present_qualification,a.attendee_college,a.attendee_branch from registration r inner join attendee a on r.attendee_id=a.attendee_id where r.event_id=? and r.join_status=1',[widget.event_id]);
+    var conn =await MySqlConnection.connect(settings);
+    var r=await conn.query('select CONCAT(CONVERT(FLOOR(FLOOR(FLOOR(DATEDIFF(CURRENT_DATE , a.attendee_dob)/365)/10)-1)*10,CHAR),"-",CONVERT(FLOOR(FLOOR(DATEDIFF(CURRENT_DATE , a.attendee_dob)/365)/10)*10,CHAR)) AS SOMETHING,a.attendee_occupation,a.attendee_present_qualification,a.attendee_college,a.attendee_branch from registration r inner join attendee a on r.attendee_id=a.attendee_id where r.event_id=? and r.join_status=1',[widget.event_id]);
+    conn.close();
     for(var i in r){
       if(agedict.containsKey(i[0])){
         agedict[i[0]]+=1;

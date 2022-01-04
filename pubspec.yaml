@@ -46,6 +46,9 @@ dependencies:
   url_launcher: ^6.0.17
   font_awesome_flutter: ^9.2.0
   syncfusion_flutter_charts: ^19.4.40
+  syncfusion_flutter_calendar: ^19.4.41
+  carousel_slider: ^4.0.0
+
 
 
 

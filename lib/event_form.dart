@@ -5,8 +5,8 @@ import 'package:mysql1/mysql1.dart';
 import 'connection_settings.dart';
 class eventform extends StatefulWidget {
   final user;
-  final conn;
-  eventform(this.user,this.conn);
+
+  eventform(this.user);
   @override
   _eventformState createState() => _eventformState();
 }
@@ -173,8 +173,9 @@ class _eventformState extends State<eventform> {
 
                     var oid=widget.user;
                     dynamic duration=end_time.difference(start_time).abs();
-                    var r=await widget.conn.query(sql,[oid,event_name,domain_name,start_time.toString(),end_time.toString(),duration.toString(),event_link,event_platform]);
-
+                    var conn =await MySqlConnection.connect(settings);
+                    var r=await conn.query(sql,[oid,event_name,domain_name,start_time.toString(),end_time.toString(),duration.toString(),event_link,event_platform]);
+                    conn.close();
                     Navigator.pop(context,"back");
 
 

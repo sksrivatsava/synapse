@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-
+import 'package:mysql1/mysql1.dart';
+import 'connection_settings.dart';
 class current_events extends StatefulWidget {
   final user;
-  final conn;
-  current_events(this.user,this.conn);
+
+  current_events(this.user);
   @override
   _current_eventsState createState() => _current_eventsState();
 }
@@ -27,7 +28,9 @@ class _current_eventsState extends State<current_events> {
     getdata();
   }
   void getdata() async {
-    var r=await widget.conn.query('select r.event_id,e.event_name,e.domain_name,o.organiser_channel_name,e.start_time,e.duration,e.evant_platform from registration r inner join event e on e.event_id=r.event_id inner join organiser o on e.organiser_id=o.organiser_id where r.attendee_id=? and e.start_time<=? and e.end_time>=?',[widget.user,DateTime.now().toString(),DateTime.now().toString()]);
+    var conn =await MySqlConnection.connect(settings);
+    var r=await conn.query('select r.event_id,e.event_name,e.domain_name,o.organiser_channel_name,e.start_time,e.duration,e.evant_platform from registration r inner join event e on e.event_id=r.event_id inner join organiser o on e.organiser_id=o.organiser_id where r.attendee_id=? and e.start_time<=? and e.end_time>=?',[widget.user,DateTime.now().toString(),DateTime.now().toString()]);
+    conn.close();
     for(var i in r){
       setState(() {
         l.add(eventc(i[0], i[1], i[2], i[3], i[4].toString(), i[5].toString(), i[6]));
@@ -56,7 +59,9 @@ class _current_eventsState extends State<current_events> {
                   RaisedButton(
                       child: Text('join'),
                       onPressed: () async{
-                          var r=await widget.conn.query('update registration set join_status=? where event_id=? and attendee_id=?',[1,l[i].event_id,widget.user]);
+                        var conn =await MySqlConnection.connect(settings);
+                          var r=await conn.query('update registration set join_status=? where event_id=? and attendee_id=?',[1,l[i].event_id,widget.user]);
+                          conn.close();
                   })
                 ],
               ),

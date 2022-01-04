@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:mysql1/mysql1.dart';
+
+import 'connection_settings.dart';
 
 class upcoming_events extends StatefulWidget {
   final user;
-  final conn;
-  upcoming_events(this.user,this.conn);
+
+  upcoming_events(this.user);
   @override
   _upcoming_eventsState createState() => _upcoming_eventsState();
 }
@@ -27,7 +30,9 @@ class _upcoming_eventsState extends State<upcoming_events> {
     getdata();
   }
   void getdata() async{
-    var r=await widget.conn.query('select r.event_id,e.event_name,e.domain_name,o.organiser_channel_name,e.start_time,e.duration,e.evant_platform from registration r inner join event e on e.event_id=r.event_id inner join organiser o on e.organiser_id=o.organiser_id where r.attendee_id=? and e.start_time>?',[widget.user,DateTime.now().toString()]);
+    var conn =await MySqlConnection.connect(settings);
+    var r=await conn.query('select r.event_id,e.event_name,e.domain_name,o.organiser_channel_name,e.start_time,e.duration,e.evant_platform from registration r inner join event e on e.event_id=r.event_id inner join organiser o on e.organiser_id=o.organiser_id where r.attendee_id=? and e.start_time>?',[widget.user,DateTime.now().toString()]);
+    conn.close();
     for(var i in r){
       setState(() {
         l.add(eventu(i[0], i[1], i[2], i[3], i[4].toString(), i[5].toString(), i[6]));

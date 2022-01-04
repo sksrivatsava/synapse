@@ -4,8 +4,8 @@ import 'package:mysql1/mysql1.dart';
 import 'connection_settings.dart';
 class domain_selection extends StatefulWidget {
   final userid;
-  final conn;
-  domain_selection(this.userid,this.conn);
+
+  domain_selection(this.userid);
   @override
   _domain_selectionState createState() => _domain_selectionState();
 }
@@ -44,10 +44,13 @@ class _domain_selectionState extends State<domain_selection> {
         actions: [
           Text('submit'),
           IconButton(onPressed: () async{
+            var conn =await MySqlConnection.connect(settings);
             for(var i in ind){
-              var r=await widget.conn.query('insert into domain(attendee_id,domain_name) values(?,?)',[widget.userid,i]);
+
+              var r=await conn.query('insert into domain(attendee_id,domain_name) values(?,?)',[widget.userid,i]);
 
             }
+            conn.close();
             Navigator.pop(context);
           }, icon: Icon(Icons.check))
         ],
