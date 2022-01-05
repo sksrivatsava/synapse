@@ -17,6 +17,7 @@ void main() async{
   runApp(MaterialApp(
 
     home: MyApp(),
+    debugShowCheckedModeBanner: false,
   ));
 }
 class MyApp extends StatefulWidget {

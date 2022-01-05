@@ -1,102 +1,334 @@
-// Widget build(BuildContext context) {
-//   return Scaffold(
-//     appBar: AppBar(
-//       title: Text('attendee_home     ${widget.user}'),
-//       actions: [
-//         TextButton(onPressed: (){
+// import 'package:flutter/material.dart';
+// import 'package:syncfusion_flutter_charts/charts.dart';
+// import 'package:syncfusion_flutter_charts/sparkcharts.dart';
 //
-//           getdata();
-//         }, child: Text('Refresh',style: TextStyle(color: Colors.white),)),
-//       ],
-//     ),
+// //const kPrimaryColor = Color(0xFF0C9869);
+// const kPrimaryColor = Colors.blueGrey;
+// const kTextColor = Color(0xFF3C4046);
+// const kBackgroundColor = Color(0xFFF9F8FD);
 //
-//     body: GridView.builder(
-//         itemCount: l.length,
-//         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-//             crossAxisCount: (MediaQuery.of(context).orientation == Orientation.portrait) ? 2 : 3),
+// const double kDefaultPadding = 20.0;
 //
-//         itemBuilder: (context,i){
-//           return Padding(
-//             padding: const EdgeInsets.all(8.0),
-//             child: Card(
-//               child: Column(
-//                 children: [
-//                   Text(l[i].event_id.toString()),
-//                   Text(l[i].event_name),
-//                   Text(l[i].domain_name),
-//                   Text(l[i].channel_name),
-//                   Text(l[i].start_time),
-//                   Text(l[i].event_platform),
-//                   Text(l[i].duration),
-//                   RaisedButton(
-//                       child: Text('Register'),
-//                       onPressed: () async{
-//                         var conn =await MySqlConnection.connect(settings);
-//                         var r=await conn.query('insert into registration(event_id,attendee_id,join_status) values(?,?,?)',[l[i].event_id,widget.user,0]);
-//                         conn.close();
-//                         setState(() {
-//                           l.removeAt(i);
-//                         });
-//                       })
-//                 ],
+// void main() => runApp(MaterialApp(home: MyApp()));
+//
+// class MyApp extends StatefulWidget {
+//   MyAppState createState() => MyAppState();
+// }
+//
+// class MyAppState extends State {
+//   @override
+//   final List<ChartData> data = [
+//     ChartData('David', 25),
+//     ChartData('Steve', 38),
+//     ChartData('Jack', 34),
+//     ChartData('Others', 52)
+//   ];
+//
+//   var isBarClicked = "";
+//   var isPieClicked = "";
+//   var isMathClicked = "";
+//   var typeOfGraph = "Bar Chart";
+//   var currentSelectedValue;
+//   var statFilters = [
+//     "Age Group",
+//     "Occupation Status",
+//     "Present Qualification",
+//     "College",
+//     "Branch"
+//   ];
+//
+//   Widget build(BuildContext context) {
+//     Size size = MediaQuery.of(context).size;
+//     return Scaffold(
+//       body: SingleChildScrollView(
+//         child: Column(
+//           children: <Widget>[
+//             Padding(
+//               padding: const EdgeInsets.only(bottom: kDefaultPadding * 3),
+//               child: SizedBox(
+//                 height: size.height * 0.8,
+//                 child: Row(
+//                   children: <Widget>[
+//                     Expanded(
+//                       child: Padding(
+//                         padding: const EdgeInsets.symmetric(
+//                             vertical: kDefaultPadding * 3),
+//                         child: Column(
+//                           children: <Widget>[
+//                             Align(
+//                               alignment: Alignment.topLeft,
+//                               child: IconButton(
+//                                 padding: EdgeInsets.symmetric(
+//                                     horizontal: kDefaultPadding),
+//                                 icon: const Icon(Icons.arrow_back),
+//                                 onPressed: () {
+//                                   Navigator.pop(context);
+//                                 },
+//                               ),
+//                             ),
+//                             Spacer(),
+//                             Text("Statistics",
+//                                 style: TextStyle(
+//                                     fontSize: 24,
+//                                     color: Color.fromRGBO(128, 0, 0, 100))),
+//                             Spacer(),
+//                             Container(
+//                               width: size.width * 0.2,
+//                               padding: EdgeInsets.symmetric(horizontal: 10),
+//                               child: FormField<String>(
+//                                 builder: (FormFieldState<String> state) {
+//                                   return InputDecorator(
+//                                     decoration: InputDecoration(
+//                                         border: OutlineInputBorder(
+//                                             borderRadius:
+//                                             BorderRadius.circular(5.0))),
+//                                     child: DropdownButtonHideUnderline(
+//                                       child: DropdownButton<String>(
+//                                         hint: Text("Select Filter.."),
+//                                         value: currentSelectedValue,
+//                                         isDense: true,
+//                                         onChanged: (newValue) {
+//                                           setState(() {
+//                                             currentSelectedValue = newValue;
+//                                           });
+//                                           print(currentSelectedValue);
+//                                         },
+//                                         items: statFilters.map((String value) {
+//                                           return DropdownMenuItem<String>(
+//                                             value: value,
+//                                             child: Text(value),
+//                                           );
+//                                         }).toList(),
+//                                       ),
+//                                     ),
+//                                   );
+//                                 },
+//                               ),
+//                             ),
+//                             GestureDetector(
+//                                 onTap: () {
+//                                   setState(() {
+//                                     isBarClicked = "true";
+//                                     isPieClicked = "false";
+//                                     isMathClicked = "false";
+//                                     typeOfGraph = "Bar Chart";
+//                                     print(isBarClicked +
+//                                         "  " +
+//                                         isPieClicked +
+//                                         "  " +
+//                                         isMathClicked);
+//                                   });
+//                                 },
+//                                 child: IconCard(icon: Icons.bar_chart_sharp)),
+//                             GestureDetector(
+//                                 onTap: () {
+//                                   setState(() {
+//                                     isBarClicked = "false";
+//                                     isPieClicked = "true";
+//                                     isMathClicked = "false";
+//                                     typeOfGraph = "Pie Chart";
+//                                     print(isBarClicked +
+//                                         "  " +
+//                                         isPieClicked +
+//                                         "  " +
+//                                         isMathClicked);
+//                                   });
+//                                 },
+//                                 child: IconCard(icon: Icons.pie_chart_sharp)),
+//                             GestureDetector(
+//                                 onTap: () {
+//                                   setState(() {
+//                                     isBarClicked = "false";
+//                                     isPieClicked = "false";
+//                                     isMathClicked = "true";
+//                                     typeOfGraph = "Mathematical Stats";
+//                                     print(isBarClicked +
+//                                         "  " +
+//                                         isPieClicked +
+//                                         "  " +
+//                                         isMathClicked);
+//                                   });
+//                                 },
+//                                 child: IconCard(
+//                                     icon:
+//                                     Icons.format_list_numbered_rtl_sharp)),
+//                           ],
+//                         ),
+//                       ),
+//                     ),
+//                     Container(
+//                       height: size.height * 0.8,
+//                       width: size.width * 0.75,
+//                       decoration: BoxDecoration(
+//                         borderRadius: BorderRadius.only(
+//                           topLeft: Radius.circular(63),
+//                           bottomLeft: Radius.circular(63),
+//                         ),
+//                         boxShadow: [
+//                           BoxShadow(
+//                             offset: Offset(0, 10),
+//                             blurRadius: 60,
+//                             color: kPrimaryColor.withOpacity(0.29),
+//                           ),
+//                         ],
+//                       ),
+//                       child: isPieClicked == "true"
+//                           ? PieChart(data: data)
+//                           : BarGraph(data: data),
+//                     ),
+//                   ],
+//                 ),
 //               ),
 //             ),
-//           );
-//         }),
-//     drawer: Drawer(
-//       child: Column(
-//         children: [
-//           ListTile(
-//             leading: FaIcon(FontAwesomeIcons.calendarWeek),
-//             title: Text('Calendar'),
-//             onTap: (){
-//               Navigator.push(context,MaterialPageRoute(builder: (context)=>calendar(widget.user)));
-//             },
-//           ),
-//           ListTile(
-//             leading: FaIcon(Icons.event_note),
-//             title: Text('Past_events'),
-//             onTap: (){
+//             StatsPageEventTag(
+//                 eventName: "Webinar on Information Security",
+//                 eventDateAndTime: "10:00 - 12:00, 14 July 2022",
+//                 typeOfGraph: typeOfGraph),
+//             SizedBox(height: kDefaultPadding),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }
 //
-//               Navigator.push(context, MaterialPageRoute(builder: (context)=>registered_event(widget.user)));
-//             }
+// class ChartData {
+//   ChartData(this.x, this.y);
+//   final String x;
+//   final double y;
+// }
 //
-//           ),
-//           ListTile(
-//             leading: Icon(Icons.event_available),
-//             title: Text('Current_events'),
-//             onTap: (){
-//               Navigator.push(context, MaterialPageRoute(builder: (context)=>current_events(widget.user)));
-//             },
-//           ),
-//           ListTile(
-//             leading: Icon(Icons.event_rounded),
-//             title: Text('upcoming_events'),
-//             onTap: (){
-//               Navigator.push(context, MaterialPageRoute(builder: (context)=>upcoming_events(widget.user)));
-//             },
+// class IconCard extends StatelessWidget {
+//   IconData icon;
+//   IconCard({required this.icon});
 //
+//   @override
+//   Widget build(BuildContext context) {
+//     Size size = MediaQuery.of(context).size;
+//     return Container(
+//       margin: EdgeInsets.symmetric(vertical: size.height * 0.03),
+//       padding: EdgeInsets.all(kDefaultPadding / 2),
+//       height: 62,
+//       width: 62,
+//       decoration: BoxDecoration(
+//         color: kBackgroundColor,
+//         borderRadius: BorderRadius.circular(6),
+//         boxShadow: [
+//           BoxShadow(
+//             offset: Offset(0, 15),
+//             blurRadius: 22,
+//             color: kPrimaryColor.withOpacity(0.22),
 //           ),
-//           ListTile(
-//             leading: Icon(Icons.person),
-//             title: Text('Profile'),
-//             onTap: (){
-//
-//             },
-//
+//           BoxShadow(
+//             offset: Offset(-15, -15),
+//             blurRadius: 20,
+//             color: Colors.white,
 //           ),
-//           ListTile(
-//             leading: Icon(Icons.logout),
-//             title: Text('signout'),
-//             onTap: () async{
-//               _auth.signOut();
-//               SharedPreferences prefs=await SharedPreferences.getInstance();
-//               prefs.remove('user');
-//               prefs.remove('pass');
-//             },
+//         ],
+//       ),
+//       child: Icon(icon),
+//     );
+//   }
+// }
+//
+// class PieChart extends StatelessWidget {
+//   List<ChartData> data;
+//
+//   PieChart({required this.data});
+//
+//   Widget build(BuildContext context) {
+//     return Padding(
+//       padding: EdgeInsets.fromLTRB(20, 60, 60, 20),
+//       child: SfCircularChart(
+//           legend: Legend(isVisible: true),
+//           series: <CircularSeries>[
+//             // Render pie chart
+//             PieSeries<ChartData, String>(
+//                 dataSource: data,
+//                 // pointColorMapper: (ChartData data, _) => data.color,
+//                 xValueMapper: (ChartData data, _) => data.x,
+//                 yValueMapper: (ChartData data, _) => data.y,
+//                 dataLabelSettings: DataLabelSettings(
+//                     isVisible: true,
+//                     labelPosition: ChartDataLabelPosition.outside))
+//           ]),
+//     );
+//   }
+// }
+//
+// class BarGraph extends StatelessWidget {
+//   List<ChartData> data;
+//   BarGraph({required this.data});
+//
+//   Widget build(BuildContext context) {
+//     return Padding(
+//       padding: EdgeInsets.fromLTRB(20, 60, 60, 20),
+//       child: SfCartesianChart(
+//         legend: Legend(isVisible: true),
+//         series: <ChartSeries>[
+//           ColumnSeries<ChartData, String>(
+//             dataSource: data,
+//             // pointColorMapper: (ChartData data, _) => data.color,
+//             xValueMapper: (ChartData data, _) => data.x,
+//             yValueMapper: (ChartData data, _) => data.y,
+//             dataLabelSettings: DataLabelSettings(isVisible: true),
+//             width: 0.8, // Width of the columns
+//             spacing: 0.2,
+//             // Spacing between the columns
+//           )
+//         ],
+//         primaryXAxis: CategoryAxis(),
+//       ),
+//     );
+//   }
+// }
+//
+// class StatsPageEventTag extends StatelessWidget {
+//   final String eventName;
+//   final String eventDateAndTime;
+//   final String typeOfGraph;
+//
+//   const StatsPageEventTag({
+//     this.eventName = "",
+//     this.eventDateAndTime = "",
+//     this.typeOfGraph = "",
+//   });
+//
+//   Widget build(BuildContext context) {
+//     return Padding(
+//       padding: const EdgeInsets.symmetric(horizontal: kDefaultPadding),
+//       child: Row(
+//         children: <Widget>[
+//           Column(
+//             crossAxisAlignment: CrossAxisAlignment.start,
+//             children: <Widget>[
+//               Text(eventName,
+//                   style: Theme.of(context).textTheme.headline4!.copyWith(
+//                       color: kTextColor, fontWeight: FontWeight.bold)),
+//               Text(
+//                 eventDateAndTime,
+//                 style: Theme.of(context).textTheme.headline4!.copyWith(
+//                     color: kPrimaryColor,
+//                     fontSize: 20,
+//                     fontWeight: FontWeight.w300),
+//                 // style: TextStyle(
+//                 //   fontSize: 20,
+//                 //   color: kPrimaryColor,
+//                 //   fontWeight: FontWeight.w300,
+//                 // )
+//               ),
+//             ],
+//           ),
+//           Spacer(),
+//           Text(
+//             "$typeOfGraph",
+//             style: Theme.of(context)
+//                 .textTheme
+//                 .headline5!
+//                 .copyWith(color: kPrimaryColor),
 //           )
 //         ],
 //       ),
-//     ),
-//   );
+//     );
+//   }
 // }

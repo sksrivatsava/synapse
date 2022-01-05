@@ -6,9 +6,11 @@ import 'package:mysql1/mysql1.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:synapse/calendar.dart';
 import 'package:synapse/current_events.dart';
+import 'package:synapse/explore.dart';
 import 'package:synapse/registered_events.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:synapse/upcoming_events.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'connection_settings.dart';
 
@@ -27,7 +29,8 @@ class eventa{
   DateTime start_time;
   DateTime end_time;
   String event_platform;
-  eventa(this.event_id,this.event_name,this.domain_name,this.channel_name,this.start_time,this.end_time,this.event_platform);
+  String event_link;
+  eventa(this.event_id,this.event_name,this.domain_name,this.channel_name,this.start_time,this.end_time,this.event_platform,this.event_link);
 }
 class _attendee_homeState extends State<attendee_home> {
   FirebaseAuth _auth=FirebaseAuth.instance;
@@ -62,27 +65,27 @@ class _attendee_homeState extends State<attendee_home> {
     l1=[];
     fl=[];
     var conn =await MySqlConnection.connect(settings);
-    var r=await conn.query('select e.event_id,e.event_name,e.domain_name,o.organiser_channel_name,e.start_time,e.end_time,e.evant_platform from event e inner join organiser o on e.organiser_id=o.organiser_id where e.domain_name in (select domain_name from domain where attendee_id=?) and e.event_id not in (select event_id from registration where attendee_id=?) and e.end_time>?',[widget.user,widget.user,DateTime.now().toString()]);
+    var r=await conn.query('select e.event_id,e.event_name,e.domain_name,o.organiser_channel_name,e.start_time,e.end_time,e.evant_platform,e.event_link from event e inner join organiser o on e.organiser_id=o.organiser_id where e.domain_name in (select domain_name from domain where attendee_id=?) and e.event_id not in (select event_id from registration where attendee_id=?) and e.end_time>?',[widget.user,widget.user,DateTime.now().toString()]);
 
     for(var i in r) {
       setState(() {
         dynamic st=DateTime(i[4].year,i[4].month,i[4].day,i[4].hour,i[4].minute,i[4].second);
         dynamic et=DateTime(i[5].year,i[5].month,i[5].day,i[5].hour,i[5].minute,i[5].second);
         l.add(
-            eventa(i[0],i[1], i[2], i[3],st,et,i[6]));
+            eventa(i[0],i[1], i[2], i[3],st,et,i[6],i[7]));
 
       });
     }
     setState(() {
       fl=List.from(l);
     });
-    r=await conn.query('select r.event_id,e.event_name,e.domain_name,o.organiser_channel_name,e.start_time,e.end_time,e.evant_platform from registration r inner join event e on e.event_id=r.event_id inner join organiser o on e.organiser_id=o.organiser_id where r.attendee_id=? and e.start_time<=? and e.end_time>=?',[widget.user,DateTime.now().toString(),DateTime.now().toString()]);
+    r=await conn.query('select r.event_id,e.event_name,e.domain_name,o.organiser_channel_name,e.start_time,e.end_time,e.evant_platform,e.event_link from registration r inner join event e on e.event_id=r.event_id inner join organiser o on e.organiser_id=o.organiser_id where r.attendee_id=? and e.start_time<=? and e.end_time>=?',[widget.user,DateTime.now().toString(),DateTime.now().toString()]);
     for(var i in r) {
       setState(() {
         dynamic st=DateTime(i[4].year,i[4].month,i[4].day,i[4].hour,i[4].minute,i[4].second);
         dynamic et=DateTime(i[5].year,i[5].month,i[5].day,i[5].hour,i[5].minute,i[5].second);
         l1.add(
-            eventa(i[0],i[1], i[2], i[3],st,et,i[6]));
+            eventa(i[0],i[1], i[2], i[3],st,et,i[6],i[7]));
 
       });
     }
@@ -424,6 +427,7 @@ class _attendee_homeState extends State<attendee_home> {
                                   var conn =await MySqlConnection.connect(settings);
                                   var r=await conn.query('update registration set join_status=? where event_id=? and attendee_id=?',[1,i.event_id,widget.user]);
                                   conn.close();
+                                  if (!await launch(i.event_link)) throw 'Could not launch ${i.event_link}';
 
                                 },
                                 style: TextButton.styleFrom(
@@ -507,7 +511,9 @@ class _attendee_homeState extends State<attendee_home> {
                           height: 50.0,
                           child: RaisedButton(
                             color: Colors.white70,
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.push(context, MaterialPageRoute(builder: (context)=>explore(widget.user)));
+                            },
                             child: Row(
                               children: <Widget>[
                                 Text(
