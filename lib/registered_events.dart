@@ -62,7 +62,8 @@ class _registered_eventState extends State<registered_event> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('past_events'),
+        title: Text('Past Events'),
+        backgroundColor: Color(0xff0E1E37),
 
       ),
       body: GridView.builder(

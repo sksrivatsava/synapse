@@ -3,6 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:mysql1/mysql1.dart';
 
 import 'connection_settings.dart';
+import 'organiser_details.dart';
 
 class explore extends StatefulWidget {
   final user;
@@ -19,7 +20,8 @@ class eventex{
   DateTime start_time;
   DateTime end_time;
   String event_platform;
-  eventex(this.event_id,this.event_name,this.domain_name,this.channel_name,this.start_time,this.end_time,this.event_platform);
+  int organiser_id;
+  eventex(this.event_id,this.event_name,this.domain_name,this.channel_name,this.start_time,this.end_time,this.event_platform,this.organiser_id);
 }
 
 class _exploreState extends State<explore> {
@@ -53,14 +55,14 @@ class _exploreState extends State<explore> {
     fl=[];
 
     var conn =await MySqlConnection.connect(settings);
-    var r=await conn.query('select e.event_id,e.event_name,e.domain_name,o.organiser_channel_name,e.start_time,e.end_time,e.evant_platform from event e inner join organiser o on e.organiser_id=o.organiser_id where e.event_id not in (select event_id from registration where attendee_id=?) and e.end_time>?',[widget.user,DateTime.now().toString()]);
+    var r=await conn.query('select e.event_id,e.event_name,e.domain_name,o.organiser_channel_name,e.start_time,e.end_time,e.evant_platform,o.organiser_id from event e inner join organiser o on e.organiser_id=o.organiser_id where e.event_id not in (select event_id from registration where attendee_id=?) and e.end_time>?',[widget.user,DateTime.now().toString()]);
     conn.close();
     for(var i in r) {
       setState(() {
         dynamic st=DateTime(i[4].year,i[4].month,i[4].day,i[4].hour,i[4].minute,i[4].second);
         dynamic et=DateTime(i[5].year,i[5].month,i[5].day,i[5].hour,i[5].minute,i[5].second);
         l.add(
-            eventex(i[0],i[1], i[2], i[3],st,et,i[6]));
+            eventex(i[0],i[1], i[2], i[3],st,et,i[6],i[7]));
 
       });
     }
@@ -263,7 +265,9 @@ class _exploreState extends State<explore> {
                             children: <Widget>[
                               TextButton(
                                   child: Text("VIEW ORGANIZER'S CHANNEL"),
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    Navigator.push(context, MaterialPageRoute(builder: (context)=>organiser_details(fl[i].organiser_id)));
+                                  },
                                   style: TextButton.styleFrom(
                                       textStyle: TextStyle(
                                           fontSize: 14,

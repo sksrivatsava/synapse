@@ -53,6 +53,7 @@ List<Meeting> l=[];
     return Scaffold(
       appBar: AppBar(
         title: Text('Calendar'),
+        backgroundColor: Color(0xff0E1E37),
       ),
         body: SfCalendar(
 

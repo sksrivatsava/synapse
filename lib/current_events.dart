@@ -68,7 +68,8 @@ class _current_eventsState extends State<current_events> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('current_events'),
+        title: Text('Current Events'),
+        backgroundColor: Color(0xff0E1E37),
       ),
       body: GridView.builder(
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(

@@ -61,7 +61,9 @@ class _upcoming_eventsState extends State<upcoming_events> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('upcoming_events'),
+        title: Text('Upcoming Events'),
+        backgroundColor: Color(0xff0E1E37),
+
       ),
       body: GridView.builder(
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(

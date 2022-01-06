@@ -95,6 +95,7 @@ class _analyticsState extends State<analytics> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Analytics'),
+        backgroundColor: Color(0xff0E1E37),
       ),
       body: Column(
         children: [
@@ -102,7 +103,7 @@ class _analyticsState extends State<analytics> {
             child: SfCartesianChart(
                 primaryXAxis: CategoryAxis(),
                 // Chart title
-                title: ChartTitle(text: 'No .of attendess per event'),
+                title: ChartTitle(text: 'Number Of Attendees Per Event'),
                 // Enable legend
                 legend: Legend(isVisible: true),
                 // Enable tooltip
@@ -112,7 +113,7 @@ class _analyticsState extends State<analytics> {
                       dataSource: l2,
                       xValueMapper: (line sales, _) => sales.event_name,
                       yValueMapper: (line sales, _) => sales.no,
-                      name: 'attendees number',
+                      name: 'Attendees Number',
                       // Enable data label
                       dataLabelSettings: DataLabelSettings(isVisible: true))
                 ]),

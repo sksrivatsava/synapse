@@ -1,24 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:mysql1/mysql1.dart';
-
-import 'connection_settings.dart';
-class domain_selection extends StatefulWidget {
-  final userid;
-
-  domain_selection(this.userid);
+import 'package:synapse/connection_settings.dart';
+class attendee_edit_domain extends StatefulWidget {
+  final user;
+  attendee_edit_domain(this.user);
   @override
-  _domain_selectionState createState() => _domain_selectionState();
+  _attendee_edit_domainState createState() => _attendee_edit_domainState();
 }
 
-class dcards{
+class edcards{
   String domain;
   bool istap;
 
-  dcards(this.domain,this.istap);
+  edcards(this.domain,this.istap);
 }
 
-class _domain_selectionState extends State<domain_selection> {
-  List<dcards> dl=[];
+class _attendee_edit_domainState extends State<attendee_edit_domain> {
+  List<edcards> dl=[];
   List l=[ "Machine Learning",
     "Internet of Things",
     "Big Data Analytics",
@@ -34,21 +32,34 @@ class _domain_selectionState extends State<domain_selection> {
     "Indian Culture and Geography",
     "Innovation and Design Thinking"];
   List ind=[];
-
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    getdata();
+  }
+  void getdata() async{
+    var conn =await MySqlConnection.connect(settings);
+    var r=await conn.query('select domain_name from domain where attendee_id=?',[widget.user]);
+    conn.close();
+    for(var i in r){
+      ind.add(i[0]);
+    }
 
     for(var i in l){
-      
-      setState(() {
-        dl.add(dcards(i, false));
-      });
+      if(ind.contains(i)){
+        setState(() {
+          dl.add(edcards(i, true));
+        });
+      }
+      else{
+        setState(() {
+          dl.add(edcards(i, false));
+        });
+      }
     }
+
   }
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -119,7 +130,7 @@ class _domain_selectionState extends State<domain_selection> {
 
                       if(dl[index].istap==false){
                         var conn =await MySqlConnection.connect(settings);
-                        var r=await conn.query('insert into domain(attendee_id,domain_name) values(?,?)',[widget.userid,dl[index].domain]);
+                        var r=await conn.query('insert into domain(attendee_id,domain_name) values(?,?)',[widget.user,dl[index].domain]);
                         conn.close();
                         setState(() {
                           dl[index].istap=true;
@@ -127,7 +138,7 @@ class _domain_selectionState extends State<domain_selection> {
                       }
                       else{
                         var conn =await MySqlConnection.connect(settings);
-                        var r=await conn.query('delete from domain where attendee_id=? and domain_name=?',[widget.userid,dl[index].domain]);
+                        var r=await conn.query('delete from domain where attendee_id=? and domain_name=?',[widget.user,dl[index].domain]);
                         conn.close();
                         setState(() {
                           dl[index].istap=false;
@@ -145,4 +156,3 @@ class _domain_selectionState extends State<domain_selection> {
     );
   }
 }
-

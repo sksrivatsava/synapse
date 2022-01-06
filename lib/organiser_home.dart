@@ -8,6 +8,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:synapse/analytics.dart';
 import 'package:synapse/create_meet.dart';
 import 'package:synapse/event_form.dart';
+import 'package:synapse/organiser_details.dart';
+import 'package:synapse/organiser_settings.dart';
+import 'package:synapse/select_platform.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'connection_settings.dart';
@@ -218,7 +221,15 @@ class _organiser_homeState extends State<organiser_home> {
                         icon: Icons.person,
                         onClicked: () {
                           // Navigator.push(context, MaterialPageRoute(builder: (context)=>registered_event(widget.user)));
-
+                          Navigator.push(context, MaterialPageRoute(builder: (context)=>organiser_details(widget.user)));
+                        }),
+                    const SizedBox(height: 16),
+                    buildMenuItem(
+                        text: 'Settings',
+                        icon: Icons.settings,
+                        onClicked: () {
+                          // Navigator.push(context, MaterialPageRoute(builder: (context)=>registered_event(widget.user)));
+                          Navigator.push(context, MaterialPageRoute(builder: (context)=>organiser_settings(widget.user)));
                         }),
                     const SizedBox(height: 16),
                     buildMenuItem(
@@ -292,7 +303,7 @@ class _organiser_homeState extends State<organiser_home> {
                   padding: EdgeInsets.symmetric(vertical: 20, horizontal: 30),
 
                   //margin: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                  width: 700,
+                  width: 1000,
                   height: 80,
                   decoration: BoxDecoration(
                     //color: Color.fromRGBO(255, 191, 0,100),
@@ -331,7 +342,7 @@ class _organiser_homeState extends State<organiser_home> {
                             Container(
                               padding: EdgeInsets.all(1.0),
                               child: Row(children: [
-                                Text("Presented on",
+                                Text("Presented on ",
                                     textAlign: TextAlign.left,
                                     style: TextStyle(
                                       fontSize: 14,
@@ -534,7 +545,7 @@ class _organiser_homeState extends State<organiser_home> {
                               Container(
                                 padding: EdgeInsets.all(1.0),
                                 child: Row(children: [
-                                  Text("Presented on",
+                                  Text("Presented on ",
                                       textAlign: TextAlign.left,
                                       style: TextStyle(
                                         fontSize: 14,
@@ -562,14 +573,7 @@ class _organiser_homeState extends State<organiser_home> {
                         Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
-                              TextButton(
-                                  child: Text("EDIT EVENT"),
-                                  onPressed: () {},
-                                  style: TextButton.styleFrom(
-                                      textStyle: TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.bold,
-                                          decorationColor: Colors.green))),
+                              
 
                             ])
                       ],
@@ -590,8 +594,8 @@ class _organiser_homeState extends State<organiser_home> {
 
       child: Text('+ Create Meet'),
       onPressed: () async{
-              dynamic r=await Navigator.push(context, MaterialPageRoute(builder: (context)=>eventform(widget.user)));
-        // dynamic r=await Navigator.push(context, MaterialPageRoute(builder: (context)=>create_meet()));
+              // dynamic r=await Navigator.push(context, MaterialPageRoute(builder: (context)=>eventform(widget.user)));
+        dynamic r=await Navigator.push(context, MaterialPageRoute(builder: (context)=>selectplatform(widget.user)));
               if(r=='back'){
                 getdata();
               }

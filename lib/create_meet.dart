@@ -17,9 +17,9 @@ class _create_meetState extends State<create_meet> {
   String topic = '';
   String start_time = '';
   String duration = '';
-  String JWT_TOKEN =
-      "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOm51bGwsImlzcyI6IkpUOEw1eklGU2tLNk1Kdml4cVpXTXciLCJleHAiOjE2NzE4ODY2MjAsImlhdCI6MTY0MDM1MDA5OX0.twIT019QmQeSYi6X4pp6zNlIcjnOCEAbIbBIsGNmsxs";
-
+  // String JWT_TOKEN =
+  //     "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOm51bGwsImlzcyI6IkpUOEw1eklGU2tLNk1Kdml4cVpXTXciLCJleHAiOjE2NzE4ODY2MjAsImlhdCI6MTY0MDM1MDA5OX0.twIT019QmQeSYi6X4pp6zNlIcjnOCEAbIbBIsGNmsxs";
+  String JWT_TOKEN="";
   dynamic selectedDateTime;
 
   String LABELTEXT_topic = 'Enter the subject of the meeting to be scheduled.';

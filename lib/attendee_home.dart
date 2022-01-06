@@ -4,15 +4,18 @@ import 'package:flutter/material.dart';
 import 'package:collapsible_sidebar/collapsible_sidebar.dart';
 import 'package:mysql1/mysql1.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:synapse/attendee_settings.dart';
 import 'package:synapse/calendar.dart';
 import 'package:synapse/current_events.dart';
 import 'package:synapse/explore.dart';
+import 'package:synapse/organiser_details.dart';
 import 'package:synapse/registered_events.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:synapse/upcoming_events.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'connection_settings.dart';
+import 'domain_selection.dart';
 
 class attendee_home extends StatefulWidget {
   final user;
@@ -30,7 +33,8 @@ class eventa{
   DateTime end_time;
   String event_platform;
   String event_link;
-  eventa(this.event_id,this.event_name,this.domain_name,this.channel_name,this.start_time,this.end_time,this.event_platform,this.event_link);
+  int organiser_id;
+  eventa(this.event_id,this.event_name,this.domain_name,this.channel_name,this.start_time,this.end_time,this.event_platform,this.event_link,this.organiser_id);
 }
 class _attendee_homeState extends State<attendee_home> {
   FirebaseAuth _auth=FirebaseAuth.instance;
@@ -65,27 +69,27 @@ class _attendee_homeState extends State<attendee_home> {
     l1=[];
     fl=[];
     var conn =await MySqlConnection.connect(settings);
-    var r=await conn.query('select e.event_id,e.event_name,e.domain_name,o.organiser_channel_name,e.start_time,e.end_time,e.evant_platform,e.event_link from event e inner join organiser o on e.organiser_id=o.organiser_id where e.domain_name in (select domain_name from domain where attendee_id=?) and e.event_id not in (select event_id from registration where attendee_id=?) and e.end_time>?',[widget.user,widget.user,DateTime.now().toString()]);
+    var r=await conn.query('select e.event_id,e.event_name,e.domain_name,o.organiser_channel_name,e.start_time,e.end_time,e.evant_platform,e.event_link,o.organiser_id from event e inner join organiser o on e.organiser_id=o.organiser_id where e.domain_name in (select domain_name from domain where attendee_id=?) and e.event_id not in (select event_id from registration where attendee_id=?) and e.end_time>?',[widget.user,widget.user,DateTime.now().toString()]);
 
     for(var i in r) {
       setState(() {
         dynamic st=DateTime(i[4].year,i[4].month,i[4].day,i[4].hour,i[4].minute,i[4].second);
         dynamic et=DateTime(i[5].year,i[5].month,i[5].day,i[5].hour,i[5].minute,i[5].second);
         l.add(
-            eventa(i[0],i[1], i[2], i[3],st,et,i[6],i[7]));
+            eventa(i[0],i[1], i[2], i[3],st,et,i[6],i[7],i[8]));
 
       });
     }
     setState(() {
       fl=List.from(l);
     });
-    r=await conn.query('select r.event_id,e.event_name,e.domain_name,o.organiser_channel_name,e.start_time,e.end_time,e.evant_platform,e.event_link from registration r inner join event e on e.event_id=r.event_id inner join organiser o on e.organiser_id=o.organiser_id where r.attendee_id=? and e.start_time<=? and e.end_time>=?',[widget.user,DateTime.now().toString(),DateTime.now().toString()]);
+    r=await conn.query('select r.event_id,e.event_name,e.domain_name,o.organiser_channel_name,e.start_time,e.end_time,e.evant_platform,e.event_link,o.organiser_id from registration r inner join event e on e.event_id=r.event_id inner join organiser o on e.organiser_id=o.organiser_id where r.attendee_id=? and e.start_time<=? and e.end_time>=?',[widget.user,DateTime.now().toString(),DateTime.now().toString()]);
     for(var i in r) {
       setState(() {
         dynamic st=DateTime(i[4].year,i[4].month,i[4].day,i[4].hour,i[4].minute,i[4].second);
         dynamic et=DateTime(i[5].year,i[5].month,i[5].day,i[5].hour,i[5].minute,i[5].second);
         l1.add(
-            eventa(i[0],i[1], i[2], i[3],st,et,i[6],i[7]));
+            eventa(i[0],i[1], i[2], i[3],st,et,i[6],i[7],i[8]));
 
       });
     }
@@ -95,7 +99,21 @@ class _attendee_homeState extends State<attendee_home> {
         username=i[0];
       });
     }
+    r=await conn.query('select domain_name from domain where attendee_id=?',[widget.user]);
     conn.close();
+    if(r.isEmpty){
+      Future.delayed(Duration.zero,() async{
+        dynamic r=await Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) =>
+                    domain_selection(widget.user)));
+        if(r=="back"){
+          getdata();
+        }
+      });
+    }
+
   }
 
   // Widget build(BuildContext context) {
@@ -239,7 +257,7 @@ class _attendee_homeState extends State<attendee_home> {
                         }),
                     const SizedBox(height: 16),
                     buildMenuItem(
-                        text: 'Past_events',
+                        text: 'Past Events',
                         icon: Icons.event_note,
                         onClicked: () {
                           Navigator.push(context, MaterialPageRoute(builder: (context)=>registered_event(widget.user)));
@@ -247,7 +265,7 @@ class _attendee_homeState extends State<attendee_home> {
                         }),
                     const SizedBox(height: 16),
                     buildMenuItem(
-                        text: 'Current_events',
+                        text: 'Current Events',
                         icon: Icons.event_available,
                         onClicked: () {
                           Navigator.push(context, MaterialPageRoute(builder: (context)=>current_events(widget.user)));
@@ -255,7 +273,7 @@ class _attendee_homeState extends State<attendee_home> {
                         }),
                     const SizedBox(height: 16),
                     buildMenuItem(
-                        text: 'upcoming_events',
+                        text: 'Upcoming Events',
                         icon: Icons.event_rounded,
                         onClicked: (){
                           Navigator.push(context, MaterialPageRoute(builder: (context)=>upcoming_events(widget.user)));
@@ -263,15 +281,15 @@ class _attendee_homeState extends State<attendee_home> {
                         }),
                     const SizedBox(height: 16),
                     buildMenuItem(
-                        text: 'Profile',
-                        icon: Icons.person,
+                        text: 'Settings',
+                        icon: Icons.settings,
                         onClicked: (){
-                          // Navigator.push(context, MaterialPageRoute(builder: (context)=>upcoming_events(widget.user)));
+                          Navigator.push(context, MaterialPageRoute(builder: (context)=>attendee_settings(widget.user)));
 
                         }),
                     const SizedBox(height: 16),
                     buildMenuItem(
-                        text: 'sign_out',
+                        text: 'Sign Out',
                         icon: Icons.logout,
                         onClicked: () async{
                           _auth.signOut();
@@ -340,7 +358,7 @@ class _attendee_homeState extends State<attendee_home> {
                   padding: EdgeInsets.symmetric(vertical: 20, horizontal: 30),
 
                   //margin: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                  width: 700,
+                  width: 1000,
                   height: 80,
                   decoration: BoxDecoration(
                     //color: Color.fromRGBO(255, 191, 0,100),
@@ -369,12 +387,14 @@ class _attendee_homeState extends State<attendee_home> {
                           children: <Widget>[
                             Container(
                               padding: EdgeInsets.all(1.0),
-                              child: Text("Webinar on ${i.event_name}",
-                                  textAlign: TextAlign.left,
-                                  style: TextStyle(
-                                      fontSize: 21,
-                                      color: Color.fromRGBO(128, 0, 0, 100),
-                                      fontWeight: FontWeight.bold)),
+                              child: Flexible(
+                                child: Text("Webinar on ${i.event_name}",
+                                    textAlign: TextAlign.left,
+                                    style: TextStyle(
+                                        fontSize: 21,
+                                        color: Color.fromRGBO(128, 0, 0, 100),
+                                        fontWeight: FontWeight.bold)),
+                              ),
                             ),
                             Container(
                               padding: EdgeInsets.all(1.0),
@@ -408,13 +428,15 @@ class _attendee_homeState extends State<attendee_home> {
                         child: Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: <Widget>[
-                              Text("CURRENT EVENT ALERTS",
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    color: Color.fromRGBO(0, 0, 0, 100),
-                                    fontWeight: FontWeight.w900,
-                                  )),
+                              Flexible(
+                                child: Text("CURRENT EVENT ALERTS",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      color: Color.fromRGBO(0, 0, 0, 100),
+                                      fontWeight: FontWeight.w900,
+                                    )),
+                              ),
                             ]),
                       ),
                       Spacer(),
@@ -611,7 +633,10 @@ class _attendee_homeState extends State<attendee_home> {
                             children: <Widget>[
                               TextButton(
                                   child: Text("VIEW ORGANIZER'S CHANNEL"),
-                                  onPressed: () {},
+                                  onPressed: () {
+
+                                    Navigator.push(context, MaterialPageRoute(builder: (context)=>organiser_details(fl[i].organiser_id)));
+                                  },
                                   style: TextButton.styleFrom(
                                       textStyle: TextStyle(
                                           fontSize: 14,

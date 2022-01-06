@@ -426,6 +426,7 @@ class PieChart extends StatelessWidget {
             PieSeries<chart, String>(
                 dataSource: data,
                 // pointColorMapper: (chart data, _) => data.color,
+                name:'attendee numbers',
                 xValueMapper: (chart data, _) => data.x,
                 yValueMapper: (chart data, _) => data.y,
                 dataLabelSettings: DataLabelSettings(
@@ -449,6 +450,7 @@ class BarGraph extends StatelessWidget {
           ColumnSeries<chart, String>(
             dataSource: data,
             // pointColorMapper: (chart data, _) => data.color,
+            name:'attendee numbers',
             xValueMapper: (chart data, _) => data.x,
             yValueMapper: (chart data, _) => data.y,
             dataLabelSettings: DataLabelSettings(isVisible: true),
