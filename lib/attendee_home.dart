@@ -358,7 +358,7 @@ class _attendee_homeState extends State<attendee_home> {
                   padding: EdgeInsets.symmetric(vertical: 20, horizontal: 30),
 
                   //margin: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                  width: 1000,
+                  width: 700,
                   height: 80,
                   decoration: BoxDecoration(
                     //color: Color.fromRGBO(255, 191, 0,100),
@@ -387,14 +387,12 @@ class _attendee_homeState extends State<attendee_home> {
                           children: <Widget>[
                             Container(
                               padding: EdgeInsets.all(1.0),
-                              child: Flexible(
-                                child: Text("Webinar on ${i.event_name}",
-                                    textAlign: TextAlign.left,
-                                    style: TextStyle(
-                                        fontSize: 21,
-                                        color: Color.fromRGBO(128, 0, 0, 100),
-                                        fontWeight: FontWeight.bold)),
-                              ),
+                              child: Text("Webinar on ${i.event_name}",
+                                  textAlign: TextAlign.left,
+                                  style: TextStyle(
+                                      fontSize: 21,
+                                      color: Color.fromRGBO(128, 0, 0, 100),
+                                      fontWeight: FontWeight.bold)),
                             ),
                             Container(
                               padding: EdgeInsets.all(1.0),
@@ -405,7 +403,7 @@ class _attendee_homeState extends State<attendee_home> {
                                       fontSize: 14,
                                       color: Color.fromRGBO(128, 0, 0, 100),
                                     )),
-                                Text(i.channel_name,
+                                Text("${i.channel_name}",
                                     textAlign: TextAlign.left,
                                     style: TextStyle(
                                         fontSize: 14,
@@ -415,6 +413,7 @@ class _attendee_homeState extends State<attendee_home> {
                             ),
                             Container(
                               padding: EdgeInsets.all(1.0),
+
                               child: Text("${i.start_time.hour.toString()}:${i.start_time.minute.toString()} - ${i.end_time.hour.toString()}:${i.end_time.minute.toString()}, ${i.start_time.day.toString()}th ${d[i.start_time.month]} ${i.start_time.year}",
                                   textAlign: TextAlign.left,
                                   style: TextStyle(
@@ -428,15 +427,13 @@ class _attendee_homeState extends State<attendee_home> {
                         child: Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: <Widget>[
-                              Flexible(
-                                child: Text("CURRENT EVENT ALERTS",
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      fontSize: 18,
-                                      color: Color.fromRGBO(0, 0, 0, 100),
-                                      fontWeight: FontWeight.w900,
-                                    )),
-                              ),
+                              Text("CURRENT EVENT ALERTS",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    color: Color.fromRGBO(0, 0, 0, 100),
+                                    fontWeight: FontWeight.w900,
+                                  )),
                             ]),
                       ),
                       Spacer(),

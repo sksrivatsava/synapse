@@ -303,7 +303,7 @@ class _organiser_homeState extends State<organiser_home> {
                   padding: EdgeInsets.symmetric(vertical: 20, horizontal: 30),
 
                   //margin: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                  width: 1000,
+                  width: 700,
                   height: 80,
                   decoration: BoxDecoration(
                     //color: Color.fromRGBO(255, 191, 0,100),
