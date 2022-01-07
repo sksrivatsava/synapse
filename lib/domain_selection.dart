@@ -94,11 +94,11 @@ class _domain_selectionState extends State<domain_selection> {
                         children: [
                           Padding(
                             padding: const EdgeInsets.all(8.0),
-                            child: Flexible(child: Icon(Icons.check)),
+                            child: Icon(Icons.check),
                           ),
                           Padding(
                             padding: const EdgeInsets.all(8.0),
-                            child: Flexible(child: Text(dl[index].domain)),
+                            child: Text(dl[index].domain),
                           )
                         ],
                       )
