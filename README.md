@@ -1,16 +1,15 @@
 # synapse
 
-A new Flutter application.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Webinars have become increasingly important over the years, and numerous frameworks have
+stood at the forefront of hosting and scheduling such events. However, the absence of a unified
+social front for all of such event organizers and viewers has always been the cause of
+inaccessibility and hindered outreach, since the number of platforms available to do this are
+manifold.
+This project, "Synapse" aims at bridging the gap between event organizers and viewers, by
+constructing a unified end-to-end social interaction platform, which would eventually enable
+webinar organizers and viewers across regions to register with the platform, and would deliver
+real-time updates on webinars to viewers, using Clound MySql. It also employs the use of APIs to
+directly schedule webinars and detailed viewership statistics and recommendation
+customization to users. On the whole, the objective of this project is to develop a wholesome
+social media platform for webinar viewers and organizers, similar to most video streaming
+platforms.
