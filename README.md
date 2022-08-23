@@ -8,7 +8,7 @@ manifold.
 This project, "Synapse" aims at bridging the gap between event organizers and viewers, by
 constructing a unified end-to-end social interaction platform, which would eventually enable
 webinar organizers and viewers across regions to register with the platform, and would deliver
-real-time updates on webinars to viewers, using Firebase. It also employs the use of APIs to
+real-time updates on webinars to viewers, using Clound MySql. It also employs the use of APIs to
 directly schedule webinars and detailed viewership statistics and recommendation
 customization to users. On the whole, the objective of this project is to develop a wholesome
 social media platform for webinar viewers and organizers, similar to most video streaming
