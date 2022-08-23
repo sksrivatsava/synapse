@@ -8,6 +8,7 @@ import 'package:mysql1/mysql1.dart';
 import 'package:firedart/firedart.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:synapse/domain_selection.dart';
+import 'package:synapse/forgotpassword.dart';
 
 import 'connection_settings.dart';
 import 'loading.dart';
@@ -563,6 +564,12 @@ class _authenticationState extends State<authentication> {
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
+                child: TextButton(onPressed: (){
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=>forgotpassword()));
+                }, child: Text('Forgot Password?')),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
                 child: RaisedButton(
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
@@ -598,6 +605,7 @@ class _authenticationState extends State<authentication> {
                           print(_auth.getUser());
                           prefs.setString('user', loguser);
                           prefs.setString('pass', logpass);
+
                         } else {
                           print("nope");
                         }
