@@ -13,3 +13,9 @@ directly schedule webinars and detailed viewership statistics and recommendation
 customization to users. On the whole, the objective of this project is to develop a wholesome
 social media platform for webinar viewers and organizers, similar to most video streaming
 platforms.
+
+
+[Desktop app Link](https://drive.google.com/drive/folders/1-19JGjAqo3s29DIWSXm2bdSrerETKHnX?usp=sharing )
+
+[Project Report Link](https://drive.google.com/drive/folders/1gj097uQObIiQyfetG5jICHUDTP4UgimM?usp=sharing)
+
